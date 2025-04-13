@@ -1,49 +1,61 @@
--- Authors table
-CREATE TABLE authors (
-  id INT PRIMARY KEY,
-  name VARCHAR(100) NOT NULL
+--1. Create the Database
+CREATE DATABASE BookStoreDB;
+USE BookStoreDB;
+
+--2. Design Tables and Schema
+
+--Book table: Stores book details and links to publisher and language
+CREATE TABLE book (
+    book_id INT AUTO_INCREMENT PRIMARY KEY,
+    title VARCHAR(255),
+    publisher_id INT,
+    language_id INT,
+    price DECIMAL(10,2),
+    publication_year YEAR,
+    FOREIGN KEY (publisher_id) REFERENCES publisher(publisher_id),
+    FOREIGN KEY (language_id) REFERENCES book_language(language_id)
 );
 
--- Publishers table
-CREATE TABLE publishers (
-  id INT PRIMARY KEY,
-  name VARCHAR(100) NOT NULL
+--Author table: Stores author information
+CREATE TABLE author (
+    author_id INT AUTO_INCREMENT PRIMARY KEY,
+    first_name VARCHAR(100),
+    last_name VARCHAR(100)
 );
 
--- Books table
-CREATE TABLE books (
-  id INT PRIMARY KEY,
-  title VARCHAR(255) NOT NULL,
-  author_id INT NOT NULL,
-  publisher_id INT NOT NULL,
-  publication_date DATE,
-  price DECIMAL(10, 2),
-  FOREIGN KEY (author_id) REFERENCES authors(id),
-  FOREIGN KEY (publisher_id) REFERENCES publishers(id)
+--Book_Author table: Handles many-to-many relationship between books and authors
+CREATE TABLE book_author (
+    book_id INT,
+    author_id INT,
+    PRIMARY KEY (book_id, author_id),
+    FOREIGN KEY (book_id) REFERENCES book(book_id),
+    FOREIGN KEY (author_id) REFERENCES author(author_id)
 );
 
--- Customers table
-CREATE TABLE customers (
-  id INT PRIMARY KEY,
-  name VARCHAR(100) NOT NULL,
-  email VARCHAR(255) NOT NULL UNIQUE
+--Book Language table: Lists available languages for books
+CREATE TABLE book_language (
+    language_id INT AUTO_INCREMENT PRIMARY KEY,
+    language_name VARCHAR(50)
 );
 
--- Orders table
-CREATE TABLE orders (
-  id INT PRIMARY KEY,
-  customer_id INT NOT NULL,
-  order_date DATE NOT NULL,
-  total DECIMAL(10, 2),
-  FOREIGN KEY (customer_id) REFERENCES customers(id)
+--Publisher table: Stores publisher information
+CREATE TABLE publisher (
+    publisher_id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(100)
 );
 
--- Order Items table
-CREATE TABLE order_items (
-  id INT PRIMARY KEY,
-  order_id INT NOT NULL,
-  book_id INT NOT NULL,
-  quantity INT NOT NULL CHECK (quantity > 0),
-  FOREIGN KEY (order_id) REFERENCES orders(id),
-  FOREIGN KEY (book_id) REFERENCES books(id)
+--Customer table: Stores customer information
+CREATE TABLE customer (
+    customer_id INT AUTO_INCREMENT PRIMARY KEY,
+    first_name VARCHAR(100),
+    last_name VARCHAR(100),
+    email VARCHAR(100),
+    phone VARCHAR(20)
 );
+
+--Country table: Stores country names for addresses
+CREATE TABLE country (
+    country_id INT AUTO_INCREMENT PRIMARY KEY,
+    country_name VARCHAR(100)
+);
+
