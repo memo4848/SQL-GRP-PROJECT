@@ -1,1 +1,0 @@
-# SQL-GRP-PROJECT
